@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniStart — Твой путь в лучший ВУЗ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #0ea5e9;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--secondary), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 100px;
+            padding: 80px 20px;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: var(--secondary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-inline: auto;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto 100px;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        /* Form Controls */
+        .filter-panel {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            color: var(--dark);
+            margin-bottom: 50px;
+        }
+
+        .filter-panel h2 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: var(--darker);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: #f8fafc;
+            color: var(--darker);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            background: white;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-reset {
+            background: #e2e8f0;
+            color: var(--dark);
+            margin-top: 20px;
+        }
+        .btn-reset:hover {
+            background: #cbd5e1;
+            box-shadow: none;
+        }
+
+        /* Results Grid */
+        #results-container {
+            display: none;
+        }
+
+        .results-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .results-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .results-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .uni-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .uni-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 5px; height: 100%;
+            background: var(--secondary);
+        }
+
+        .uni-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .uni-city {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .uni-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .uni-program {
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tag-subject { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
+        .tag-grant-high { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .tag-grant-low { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .tag-paid { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        .uni-info {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .uni-link {
+            display: inline-block;
+            text-align: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .uni-link:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--darker);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🎓 UniStart</div>
+    </header>
+
+    <div class="hero">
+        <h1>Найди свой ВУЗ <span>в пару кликов</span></h1>
+        <p>Актуальная база университетов Казахстана. Введи свой балл ЕНТ, выбери город и направление, а мы покажем, куда ты сможешь поступить.</p>
+    </div>
+
+    <div class="container">
+        <div class="filter-panel" id="filter-section">
+            <h2>Настрой параметры поступления</h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="city">📍 Город обучения:</label>
+                    <select id="city" class="form-control">
+                        <option value="all">Все города</option>
+                        <option value="Karaganda">Караганда</option>
+                        <option value="Astana">Астана</option>
+                        <option value="Almaty">Алматы</option>
+                        <option value="Shymkent">Шымкент</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="direction">📚 Направление:</label>
+                    <select id="direction" class="form-control">
+                        <option value="IT">💻 IT и Программирование</option>
+                        <option value="Engineering">⚙️ Инженерия и Технологии</option>
+                        <option value="Economics">📈 Экономика, Бизнес и Менеджмент</option>
+                        <option value="Pedagogy">👨‍🏫 Педагогика и Образование</option>
+                        <option value="Medicine">⚕️ Медицина и Фармация</option>
+                        <option value="Humanities">⚖️ Юриспруденция и Гуманитарные</option>
+                        <option value="Creative">🎨 Творческие специальности</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="score-input">🎯 Прогнозируемый балл ЕНТ (50-140):</label>
+                    <input type="number" id="score-input" class="form-control" placeholder="Например: 105" min="50" max="140">
+                </div>
+            </div>
+
+            <button class="btn" onclick="searchUniversities()">Подобрать программы</button>
+        </div>
+
+        <div id="results-container">
+            <div class="results-header">
+                <h2>Рекомендуемые программы</h2>
+                <p id="results-meta">Найдено вариантов: 0</p>
+            </div>
+            
+            <div class="cards-grid" id="cards-grid">
+                </div>
+
+            <button class="btn btn-reset" onclick="resetSearch()">Изменить параметры поиска</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 UniStart. Разработано для абитуриентов Казахстана.</p>
+    </footer>
+
+    <script>
+        // Масштабная база данных университетов
+        const db = [
+            // ================= КАРАГАНДА =================
+            {
+                name: "Карагандинский технический университет (КарТУ)", city: "Karaganda", direction: "IT",
+                program: "Вычислительная техника и программное обеспечение", subjects: "Математика - Информатика",
+                scoreGrant: 100, scorePaid: 65, link: "https://www.kstu.kz/",
+                info: "Один из ведущих политехов страны. Сильнейшая база для программистов, разработчиков ПО и системных инженеров. Много грантов."
+            },
+            {
+                name: "Карагандинский технический университет (КарТУ)", city: "Karaganda", direction: "Engineering",
+                program: "Автоматизация и управление", subjects: "Математика - Физика",
+                scoreGrant: 90, scorePaid: 60, link: "https://www.kstu.kz/",
+                info: "Подготовка инженеров для промышленности, работа с робототехникой и умными системами."
+            },
+            {
+                name: "Карагандинский университет Казпотребсоюза", city: "Karaganda", direction: "Economics",
+                program: "Финансы и IT-менеджмент", subjects: "Математика - География",
+                scoreGrant: 110, scorePaid: 70, link: "https://www.keu.kz/",
+                info: "Лучший экономический вуз региона. Отличные программы по бизнесу, учету и внедрению IT в экономику."
+            },
+            {
+                name: "Карагандинский университет Казпотребсоюза", city: "Karaganda", direction: "IT",
+                program: "Информационные системы", subjects: "Математика - Информатика",
+                scoreGrant: 95, scorePaid: 65, link: "https://www.keu.kz/",
+                info: "Симбиоз программирования и понимания бизнес-процессов. Выпускники востребованы в банках и финтехе."
+            },
+            {
+                name: "Карагандинский университет им. Е.А. Букетова", city: "Karaganda", direction: "Pedagogy",
+                program: "Педагогика и психология", subjects: "Биология - География",
+                scoreGrant: 85, scorePaid: 60, link: "https://buketov.edu.kz/",
+                info: "Классический университет с огромной историей. Качественная подготовка преподавателей."
+            },
+            {
+                name: "Карагандинский университет им. Е.А. Букетова", city: "Karaganda", direction: "Humanities",
+                program: "Юриспруденция", subjects: "Всемирная история - Основы права",
+                scoreGrant: 115, scorePaid: 75, link: "https://buketov.edu.kz/",
+                info: "Высокий конкурс на грант. Сильная юридическая школа Центрального Казахстана."
+            },
+            {
+                name: "Медицинский университет Караганды (КГМУ)", city: "Karaganda", direction: "Medicine",
+                program: "Общая медицина", subjects: "Биология - Химия",
+                scoreGrant: 112, scorePaid: 80, link: "https://qmu.edu.kz/",
+                info: "Один из самых престижных медицинских вузов РК с передовыми лабораториями и клинической базой."
+            },
+
+            // ================= АСТАНА =================
+            {
+                name: "Евразийский национальный университет (ЕНУ)", city: "Astana", direction: "IT",
+                program: "Программная инженерия", subjects: "Математика - Информатика",
+                scoreGrant: 115, scorePaid: 80, link: "https://enu.kz/",
+                info: "Топовый национальный вуз. Высокая конкуренция, но диплом высоко ценится работодателями."
+            },
+            {
+                name: "Евразийский национальный университет (ЕНУ)", city: "Astana", direction: "Humanities",
+                program: "Международные отношения", subjects: "Иностранный язык - Всемирная история",
+                scoreGrant: 125, scorePaid: 90, link: "https://enu.kz/",
+                info: "Элитная программа для будущих дипломатов и специалистов по внешней политике."
+            },
+            {
+                name: "Astana IT University (AITU)", city: "Astana", direction: "IT",
+                program: "Cyber Security & Data Science", subjects: "Математика - Информатика",
+                scoreGrant: 105, scorePaid: 75, link: "https://astanait.edu.kz/",
+                info: "Инновационный вуз, обучение на английском языке, тесные связи с Astana Hub."
+            },
+            {
+                name: "Казахский агротехнический университет (КазАТИУ)", city: "Astana", direction: "Engineering",
+                program: "Мехатроника и Робототехника", subjects: "Математика - Физика",
+                scoreGrant: 90, scorePaid: 65, link: "https://kazatu.edu.kz/",
+                info: "Современный исследовательский университет, мощная инженерно-техническая база."
+            },
+            {
+                name: "Медицинский университет Астана (МУА)", city: "Astana", direction: "Medicine",
+                program: "Стоматология", subjects: "Биология - Химия",
+                scoreGrant: 120, scorePaid: 90, link: "https://amu.kz/",
+                info: "Огромный конкурс, высочайшие требования к знаниям. Столица медицины."
+            },
+            {
+                name: "Казахский национальный университет искусств (Шабыт)", city: "Astana", direction: "Creative",
+                program: "Режиссура и Актёрское искусство", subjects: "Творческие экзамены",
+                scoreGrant: 100, scorePaid: 70, link: "https://kaznui.kz/",
+                info: "Главный творческий вуз столицы. Прием идет по результатам внутренних творческих экзаменов."
+            },
+
+            // ================= АЛМАТЫ =================
+            {
+                name: "Казахский национальный университет им. аль-Фараби (КазНУ)", city: "Almaty", direction: "IT",
+                program: "Компьютерные науки (Computer Science)", subjects: "Математика - Информатика",
+                scoreGrant: 118, scorePaid: 85, link: "https://www.kaznu.kz/",
+                info: "Вуз №1 в Казахстане по мировым рейтингам. Академический подход к программированию и ИИ."
+            },
+            {
+                name: "Казахстанско-Британский технический университет (КБТУ)", city: "Almaty", direction: "IT",
+                program: "Информационные системы", subjects: "Математика - Информатика",
+                scoreGrant: 110, scorePaid: 85, link: "https://kbtu.edu.kz/",
+                info: "Престижный вуз. Выпускники работают в BigTech компаниях (Google, Meta, Booking)."
+            },
+            {
+                name: "Satbayev University (Политех)", city: "Almaty", direction: "Engineering",
+                program: "Нефтегазовое дело", subjects: "Математика - Физика",
+                scoreGrant: 95, scorePaid: 70, link: "https://satbayev.university/",
+                info: "Главный и старейший технический вуз Казахстана. Инженерия на мировом уровне."
+            },
+            {
+                name: "Университет КИМЭП", city: "Almaty", direction: "Economics",
+                program: "Бизнес-администрирование (BSc)", subjects: "Математика - География",
+                scoreGrant: 115, scorePaid: 80, link: "https://kimep.kz/",
+                info: "Западная модель образования, полностью на английском языке. Лидер в бизнес-образовании."
+            },
+            {
+                name: "Сулейман Демирель Университет (SDU)", city: "Almaty", direction: "IT",
+                program: "Инженерия программного обеспечения", subjects: "Математика - Информатика",
+                scoreGrant: 105, scorePaid: 75, link: "https://sdu.edu.kz/",
+                info: "Кампус американского типа, сильное IT-сообщество, обучение на английском."
+            },
+            {
+                name: "Казахский национальный медицинский университет (КазНМУ)", city: "Almaty", direction: "Medicine",
+                program: "Фармация", subjects: "Биология - Химия",
+                scoreGrant: 108, scorePaid: 80, link: "https://kaznmu.edu.kz/",
+                info: "Старейший и самый авторитетный медвуз страны."
+            },
+            {
+                name: "Narxoz University (Нархоз)", city: "Almaty", direction: "Economics",
+                program: "Цифровой маркетинг", subjects: "Математика - География",
+                scoreGrant: 95, scorePaid: 70, link: "https://narxoz.edu.kz/",
+                info: "Обновленный кампус, современные программы по экономике и финансам."
+            },
+
+            // ================= ШЫМКЕНТ =================
+            {
+                name: "Южно-Казахстанский университет им. М. Ауэзова (ЮКУ)", city: "Shymkent", direction: "Engineering",
+                program: "Химическая инженерия", subjects: "Математика - Химия",
+                scoreGrant: 80, scorePaid: 55, link: "https://auezov.edu.kz/",
+                info: "Крупнейший многопрофильный вуз юга. Сильная химико-технологическая школа."
+            },
+            {
+                name: "Южно-Казахстанский университет им. М. Ауэзова (ЮКУ)", city: "Shymkent", direction: "IT",
+                program: "Вычислительная техника", subjects: "Математика - Информатика",
+                scoreGrant: 90, scorePaid: 60, link: "https://auezov.edu.kz/",
+                info: "Хорошая база для старта карьеры в сфере IT на юге страны."
+            },
+            {
+                name: "Южно-Казахстанский государственный педагогический университет", city: "Shymkent", direction: "Pedagogy",
+                program: "Учитель математики и информатики", subjects: "Математика - Физика",
+                scoreGrant: 85, scorePaid: 60, link: "https://okmpu.kz/",
+                info: "Кузница педагогических кадров южного региона. Стабильное трудоустройство."
+            },
+            {
+                name: "Южно-Казахстанская медицинская академия (ЮКМА)", city: "Shymkent", direction: "Medicine",
+                program: "Педиатрия", subjects: "Биология - Химия",
+                scoreGrant: 100, scorePaid: 75, link: "https://skma.edu.kz/",
+                info: "Ведущий медицинский центр региона с собственной клинической базой."
+            },
+            {
+                name: "Silkway International University", city: "Shymkent", direction: "Humanities",
+                program: "Переводческое дело", subjects: "Иностранный язык - Всемирная история",
+                scoreGrant: 95, scorePaid: 60, link: "https://swiu.kz/",
+                info: "Динамично развивающийся частный вуз с уклоном в гуманитарные и социальные науки."
+            }
+        ];
+
+        function searchUniversities() {
+            const city = document.getElementById('city').value;
+            const direction = document.getElementById('direction').value;
+            const scoreInput = document.getElementById('score-input').value;
+
+            if (!scoreInput || scoreInput < 50 || scoreInput > 140) {
+                alert("❗️ Пожалуйста, введите корректный балл ЕНТ от 50 до 140.");
+                return;
+            }
+
+            const userScore = parseInt(scoreInput);
+
+            // Фильтрация базы данных
+            let results = db.filter(uni => uni.direction === direction);
+            if (city !== "all") {
+                results = results.filter(uni => uni.city === city);
+            }
+
+            // Прячем фильтры, показываем результаты
+            document.getElementById('filter-section').style.display = 'none';
+            const resultsContainer = document.getElementById('results-container');
+            const cardsGrid = document.getElementById('cards-grid');
+            
+            resultsContainer.style.display = 'block';
+            cardsGrid.innerHTML = '';
+
+            // Склонение слова "вариант"
+            let countText = "вариантов";
+            if (results.length === 1) countText = "вариант";
+            else if (results.length > 1 && results.length < 5) countText = "варианта";
+            
+            document.getElementById('results-meta').innerHTML = `Найдено ${results.length} ${countText} для твоего балла (<strong>${userScore}</strong>)`;
+
+            if (results.length === 0) {
+                cardsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 20px;">
+                        <h3 style="margin-bottom: 15px;">Упс, ничего не найдено 😢</h3>
+                        <p style="color: #94a3b8;">Попробуй выбрать другой город или расширить параметры поиска.</p>
+                    </div>`;
+                return;
+            }
+
+            // Рендер карточек
+            results.forEach(uni => {
+                const card = document.createElement('div');
+                card.className = 'uni-card';
+
+                // Определение шансов
+                let statusTag = '';
+                if (direction === "Creative") {
+                    statusTag = `<span class="tag tag-grant-low">🎨 Творческий экзамен</span>`;
+                } else if (userScore >= uni.scoreGrant) {
+                    statusTag = `<span class="tag tag-grant-high">✅ Высокий шанс на грант (от ${uni.scoreGrant})</span>`;
+                } else if (userScore >= uni.scorePaid) {
+                    statusTag = `<span class="tag tag-paid">💰 Поступление на платное (от ${uni.scorePaid})</span>
+                                 <span class="tag tag-grant-low">🎯 До гранта нужно: ${uni.scoreGrant}</span>`;
+                } else {
+                    statusTag = `<span class="tag tag-paid" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">❌ Балл ниже проходного (нужно от ${uni.scorePaid})</span>`;
+                }
+
+                // Преобразование city value в читаемый вид
+                const cityNames = {
+                    "Karaganda": "Караганда",
+                    "Astana": "Астана",
+                    "Almaty": "Алматы",
+                    "Shymkent": "Шымкент"
+                };
+
+                card.innerHTML = `
+                    <div class="uni-city">📍 ${cityNames[uni.city]}</div>
+                    <h3>${uni.name}</h3>
+                    <div class="uni-program">Программа: ${uni.program}</div>
+                    
+                    <div class="tags">
+                        <span class="tag tag-subject">📚 ${uni.subjects}</span>
+                        ${statusTag}
+                    </div>
+                    
+                    <p class="uni-info">${uni.info}</p>
+                    
+                    <a href="${uni.link}" target="_blank" class="uni-link">Перейти на сайт ВУЗа ↗</a>
+                `;
+                cardsGrid.appendChild(card);
+            });
+        }
+
+        function resetSearch() {
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('filter-section').style.display = 'block';
+            window.scrollTo({ top: document.getElementById('filter-section').offsetTop - 100, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
